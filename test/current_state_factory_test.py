@@ -15,7 +15,7 @@ class CurrentStateFactory_TestCase(unittest.TestCase):
     logging.basicConfig(format='%(asctime)s %(module)s %(levelname)s: %(message)s',
                         datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
-    def test_WHEN_get_quote_df_THEN_correct(self):
+    def test_WHEN_get_data_THEN_correct(self):
         # Array
         stock1_df = pd.DataFrame({OPEN: [11, 12, 13]}, index=[datetime(
             2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
@@ -98,3 +98,71 @@ class CurrentStateFactory_TestCase(unittest.TestCase):
             ChartKey("st2", TimeFrame.H), ind2_cfg).value("v21"))
         self.assertEqual(212, cs_cnt.indicators.get(
             ChartKey("st2", TimeFrame.H), ind2_cfg).value("v22"))
+
+    def test_WHEN_datetime_not_equal_in_quote_THEN_get_error(self):
+        # Array
+        stock1_df = pd.DataFrame({OPEN: [11, 12, 13]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 4)])
+        stock2_df = pd.DataFrame({OPEN: [21, 22, 23]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_df = pd.DataFrame({"v11": [101, 102, 103], "v12": [111, 112, 113]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind2_df = pd.DataFrame({"v21": [201, 202, 203], "v22": [211, 212, 213]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_cfg = IndicatorSettings("ind1", {"a1": 1})
+        ind2_cfg = IndicatorSettings("ind2", {"a2": 1})
+
+        # Assert
+        self.assertRaises(Exception, lambda: CurrentStateContainer({"s1": stock1_df, "s2": stock2_df}, {
+            (ChartKey("st1", TimeFrame.D), ind1_cfg): ind1_df, (ChartKey("st2", TimeFrame.H), ind2_cfg): ind2_df}))
+
+    def test_WHEN_datetime_not_equal_in_indicators_THEN_get_error(self):
+        # Array
+        stock1_df = pd.DataFrame({OPEN: [11, 12, 13]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        stock2_df = pd.DataFrame({OPEN: [21, 22, 23]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_df = pd.DataFrame({"v11": [101, 102, 103], "v12": [111, 112, 113]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind2_df = pd.DataFrame({"v21": [201, 202, 203], "v22": [211, 212, 213]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 5)])
+        ind1_cfg = IndicatorSettings("ind1", {"a1": 1})
+        ind2_cfg = IndicatorSettings("ind2", {"a2": 1})
+
+        # Assert
+        self.assertRaises(Exception, lambda: CurrentStateContainer({"s1": stock1_df, "s2": stock2_df}, {
+            (ChartKey("st1", TimeFrame.D), ind1_cfg): ind1_df, (ChartKey("st2", TimeFrame.H), ind2_cfg): ind2_df}))
+
+    def test_WHEN_differennt_count_of_rows_in_quotes_THEN_get_error(self):
+        # Array
+        stock1_df = pd.DataFrame({OPEN: [11, 12]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2)])
+        stock2_df = pd.DataFrame({OPEN: [21, 22, 23]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_df = pd.DataFrame({"v11": [101, 102, 103], "v12": [111, 112, 113]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind2_df = pd.DataFrame({"v21": [201, 202, 203], "v22": [211, 212, 213]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_cfg = IndicatorSettings("ind1", {"a1": 1})
+        ind2_cfg = IndicatorSettings("ind2", {"a2": 1})
+
+        # Assert
+        self.assertRaises(Exception, lambda: CurrentStateContainer({"s1": stock1_df, "s2": stock2_df}, {
+            (ChartKey("st1", TimeFrame.D), ind1_cfg): ind1_df, (ChartKey("st2", TimeFrame.H), ind2_cfg): ind2_df}))
+
+    def test_WHEN_differennt_count_of_rows_in_indicators_THEN_get_error(self):
+        # Array
+        stock1_df = pd.DataFrame({OPEN: [11, 12, 13]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        stock2_df = pd.DataFrame({OPEN: [21, 22, 23]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_df = pd.DataFrame({"v11": [101, 102], "v12": [111, 112]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2)])
+        ind2_df = pd.DataFrame({"v21": [201, 202, 203], "v22": [211, 212, 213]}, index=[datetime(
+            2020, 1, 1, 1, 1), datetime(2020, 1, 1, 1, 2), datetime(2020, 1, 1, 1, 3)])
+        ind1_cfg = IndicatorSettings("ind1", {"a1": 1})
+        ind2_cfg = IndicatorSettings("ind2", {"a2": 1})
+
+        # Assert
+        self.assertRaises(Exception, lambda: CurrentStateContainer({"s1": stock1_df, "s2": stock2_df}, {
+            (ChartKey("st1", TimeFrame.D), ind1_cfg): ind1_df, (ChartKey("st2", TimeFrame.H), ind2_cfg): ind2_df}))

@@ -1,7 +1,7 @@
 from abc import ABC
 from .quote import MarketQuotesCurrentState, StockQuoteCurrentStateContainer
 from .datetime_current_state import DateTimeCurrentState, DateTimeCurrentStateConatiner
-from .indicator import MarketIndicatorsCurrentState, IndicatorCurrentStateConatiner, ChartIndicatorCurrentState
+from .indicator import MarketIndicatorsCurrentState, IndicatorCurrentStateConatiner
 import pandas as pd
 from typing import Dict, Tuple
 import sys
@@ -14,22 +14,47 @@ class CurrentState(ABC):
 
   @property
   def datetime(self) -> DateTimeCurrentState:
+    """Get current state of datetime
+
+    Returns:
+        DateTimeCurrentState: Datetime current state
+    """
     ...
 
   @property
   def quotes(self) -> MarketQuotesCurrentState:
+    """Get Current state of stock quotes
+
+    Returns:
+        MarketQuotesCurrentState: Current state of stock quotes
+    """
     ...
 
   @property
   def indicators(self) -> MarketIndicatorsCurrentState:
+    """Get Current state of Indicators 
+
+    Returns:
+        MarketIndicatorsCurrentState: Current state of Indicators 
+    """
     ...
 
   @property
   def index(self) -> int:
+    """Current index (not datetime)
+
+    Returns:
+        int: number if index
+    """
     ...
 
   @property
   def last_index(self) -> int:
+    """Last index in datas
+
+    Returns:
+        int: last index
+    """
     ...
 
   def __str__(self) -> str:
