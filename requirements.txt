@@ -1,0 +1,1 @@
+NNTrade.indicators @ git+https://git@github.com/NNTrade/IndicatorFactory.git#egg=NNTrade.indicators
