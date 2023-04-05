@@ -16,7 +16,7 @@ for req_file in ["requirements.txt"]:
           in pkg_resources.parse_requirements(requirements_txt)
       ])
 
-lib = "NNTrade.current_state"
+lib = "NNTrade.simulation.current_state"
 
 libs = [f"{lib}.{pkg}" for pkg in setuptools.find_packages(where="src")]
 libs.append(lib)
